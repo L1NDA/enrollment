@@ -13,11 +13,25 @@ library(janitor)
 ```
 
 ```{r}
-enrollment <- read_excel(class_enrollment_summary_by_term2.18.20.xlsx, skip = 3) %>% 
+enrollment_2020 <- read_excel("class_enrollment_summary_by_term2.18.20.xlsx", skip = 3) %>% 
   clean_names() %>%
-  filter(!is.na(course_name)) %>%
-  arrange(-(total))
+  filter(!is.na(course_name))
 
-enrollment
+enrollment_2019 <- read_excel("class_enrollment_summary_by_term_3.22.19_0.xlsx", skip = 3) %>% 
+  clean_names() %>%
+  filter(!is.na(course_name))
+
+new_courses <- enrollment_2020 %>% 
+  anti_join(enrollment_2019, by = "course_id")
+
+# enrollment %>%
+#   group_by(course_department) %>%
+#   summarise(overall = sum(total)) %>%
+#   arrange(desc(overall)) %>%
+#   slice(1:5)
+
+new_courses %>%
+  arrange(desc(total)) %>% 
+  slice(1:5)
 ```
 
